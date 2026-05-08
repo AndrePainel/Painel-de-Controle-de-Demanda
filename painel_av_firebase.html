@@ -1,0 +1,337 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.av{background:#0f0f13;border-radius:16px;padding:0 0 1.5rem;font-family:system-ui,sans-serif;}
+.av-header{padding:1.25rem 1.5rem;border-bottom:1px solid #1e1e2a;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.av-logo{display:flex;align-items:center;gap:12px;}
+.av-mark{width:42px;height:42px;border-radius:10px;background:#7F77DD;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.av-brand{font-size:15px;font-weight:600;color:#f0efff;}
+.av-sub{font-size:11px;color:#6b6b8a;margin-top:1px;}
+.av-header-right{display:flex;align-items:center;gap:8px;}
+.av-sync{font-size:11px;color:#6b6b8a;display:flex;align-items:center;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:#4a4a6a;transition:background .4s;}
+.dot.ok{background:#639922;}.dot.saving{background:#EF9F27;}.dot.err{background:#E24B4A;}
+.av-dl-btn{background:#1e1e2a;border:1px solid #2e2e3e;border-radius:8px;padding:7px 14px;font-size:12px;color:#a0a0c0;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;}
+.av-dl-btn:hover{border-color:#7F77DD;color:#b0abff;}
+.av-add-btn{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.av-add-btn:hover{opacity:.88;}
+.av-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:1.25rem 1.5rem;}
+.av-metric{background:#222230;border:1px solid #2a2a3a;border-radius:10px;padding:.9rem 1rem;}
+.av-metric-label{font-size:11px;color:#5a5a7a;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.av-metric-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.av-metric-val{font-size:26px;font-weight:600;color:#f0efff;}
+.av-filters{display:flex;align-items:center;gap:8px;padding:0 1.5rem .9rem;flex-wrap:wrap;}
+.av-filter-btn{border:1px solid #2e2e3e;background:transparent;border-radius:999px;padding:5px 14px;font-size:12px;color:#6b6b8a;cursor:pointer;transition:all .15s;}
+.av-filter-btn:hover,.av-filter-btn.active{background:#1a1a2e;border-color:#7F77DD;color:#b0abff;}
+.av-search{border:1px solid #2e2e3e;background:#1c1c27;border-radius:8px;padding:6px 12px;font-size:12px;color:#f0efff;width:170px;outline:none;margin-left:auto;}
+.av-search::placeholder{color:#4a4a6a;}
+.av-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 1.5rem;}
+.av-col-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:9px 12px;border-radius:10px;}
+.av-col-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.av-col-title{font-size:13px;font-weight:600;}
+.av-col-count{margin-left:auto;font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;}
+.col-red .av-col-header{background:#251414;}.col-red .av-col-dot{background:#E24B4A;}.col-red .av-col-title{color:#f09595;}.col-red .av-col-count{background:#2e1616;color:#f09595;}
+.col-orange .av-col-header{background:#261b0e;}.col-orange .av-col-dot{background:#EF9F27;}.col-orange .av-col-title{color:#FAC775;}.col-orange .av-col-count{background:#2e200e;color:#FAC775;}
+.col-green .av-col-header{background:#131f0e;}.col-green .av-col-dot{background:#639922;}.col-green .av-col-title{color:#97C459;}.col-green .av-col-count{background:#16240e;color:#97C459;}
+.av-card{background:#23233a;border:1px solid #2e2e48;border-radius:12px;padding:.85rem 1rem;margin-bottom:8px;transition:border-color .15s;position:relative;overflow:hidden;}
+.av-card:hover{border-color:#4a4a6a;}
+.av-status-bar{position:absolute;left:0;top:0;bottom:0;width:3px;}
+.bar-red{background:#E24B4A;}.bar-orange{background:#EF9F27;}.bar-green{background:#639922;}
+.av-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:5px;}
+.av-card-title{font-size:13px;font-weight:500;color:#e8e8f5;line-height:1.4;}
+.av-card-id{font-size:10px;color:#4a4a6a;flex-shrink:0;margin-top:2px;}
+.av-card-desc{font-size:11px;color:#6a6a8a;line-height:1.5;margin-bottom:8px;}
+.av-card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.av-tag{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:500;}
+.av-tag-purple{background:#2a2450;color:#AFA9EC;}.av-tag-teal{background:#0e2820;color:#5DCAA5;}.av-tag-coral{background:#2a1810;color:#F0997B;}
+.av-card-date{font-size:10px;color:#4a4a6a;margin-left:auto;display:flex;align-items:center;gap:3px;}
+.av-card-avatar{width:20px;height:20px;border-radius:50%;background:#2a2450;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#AFA9EC;flex-shrink:0;}
+.av-actions{display:flex;gap:4px;margin-top:8px;padding-top:8px;border-top:1px solid #2a2a3e;}
+.av-action-btn{flex:1;border:1px solid #2e2e48;background:transparent;border-radius:7px;padding:5px 0;font-size:10px;color:#5a5a7a;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:3px;}
+.av-action-btn:hover{background:#2a2a3e;color:#d0d0e8;}
+.av-action-btn.go:hover{background:#131f0e;border-color:#3B6D11;color:#97C459;}
+.av-action-btn.or:hover{background:#261b0e;border-color:#854F0B;color:#FAC775;}
+.av-empty{text-align:center;padding:2rem .5rem;color:#3a3a5a;font-size:12px;}
+.av-skeleton{background:#1e1e2a;border-radius:12px;height:110px;margin-bottom:8px;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:.7;}}
+.av-modal-wrap{min-height:440px;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;border-radius:16px;margin:0 1rem 1rem;}
+.av-modal-wrap.open{display:flex;}
+.av-modal{background:#1c1c2a;border:1px solid #2e2e3e;border-radius:14px;padding:1.5rem;width:340px;max-width:95%;}
+.av-modal h3{font-size:15px;font-weight:600;color:#f0efff;margin-bottom:1rem;}
+.av-modal label{font-size:11px;color:#5a5a7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.av-modal input,.av-modal textarea,.av-modal select{width:100%;margin-bottom:12px;font-size:13px;background:#0f0f13;border:1px solid #2e2e3e;color:#e8e8f5;border-radius:8px;padding:7px 10px;outline:none;}
+.av-modal textarea{min-height:70px;resize:vertical;}
+.av-modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+.av-btn-cancel{border:1px solid #2e2e3e;background:transparent;border-radius:8px;padding:7px 16px;font-size:13px;color:#6b6b8a;cursor:pointer;}
+.av-btn-save{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;}
+.av-btn-save:disabled{opacity:.4;cursor:not-allowed;}
+.av-toast{position:absolute;bottom:1.2rem;right:1.5rem;background:#2a2a3e;border:1px solid #3a3a52;border-radius:8px;padding:7px 14px;font-size:12px;color:#c0c0e0;opacity:0;transition:opacity .3s;pointer-events:none;z-index:50;}
+.av-toast.show{opacity:1;}
+</style>
+
+<div class="av" id="av-root" style="position:relative;">
+<h2 class="sr-only">Painel de Demanda — André Paschoalini Bonsaver</h2>
+
+<div class="av-header">
+  <div class="av-logo">
+    <div class="av-mark">AV</div>
+    <div>
+      <div class="av-brand">André Paschoalini Bonsaver</div>
+      <div class="av-sub">Painel de Demandas · Adriana Vilarinho</div>
+    </div>
+  </div>
+  <div class="av-header-right">
+    <div class="av-sync"><div class="dot" id="sdot"></div><span id="slbl">Conectando...</span></div>
+    <button class="av-dl-btn" onclick="exportImg()"><i class="ti ti-download" style="font-size:14px" aria-hidden="true"></i> Exportar</button>
+    <button class="av-add-btn" onclick="openModal()"><i class="ti ti-plus" style="font-size:14px" aria-hidden="true"></i> Nova demanda</button>
+  </div>
+</div>
+
+<div class="av-metrics" id="metrics">
+  <div class="av-metric"><div class="av-metric-label">Total</div><div class="av-metric-val" style="color:#3a3a5a">—</div></div>
+  <div class="av-metric"><div class="av-metric-label"><span class="av-metric-dot" style="background:#E24B4A"></span>Não iniciadas</div><div class="av-metric-val" style="color:#3a3a5a">—</div></div>
+  <div class="av-metric"><div class="av-metric-label"><span class="av-metric-dot" style="background:#EF9F27"></span>Em criação</div><div class="av-metric-val" style="color:#3a3a5a">—</div></div>
+  <div class="av-metric"><div class="av-metric-label"><span class="av-metric-dot" style="background:#639922"></span>Finalizadas</div><div class="av-metric-val" style="color:#3a3a5a">—</div></div>
+</div>
+
+<div class="av-filters">
+  <button class="av-filter-btn active" onclick="setFilter('todas',this)">Todas</button>
+  <button class="av-filter-btn" onclick="setFilter('nao_iniciada',this)">Não iniciada</button>
+  <button class="av-filter-btn" onclick="setFilter('em_criacao',this)">Em criação</button>
+  <button class="av-filter-btn" onclick="setFilter('finalizada',this)">Finalizada</button>
+  <input class="av-search" id="srch" type="text" placeholder="Buscar demanda..." oninput="render()"/>
+</div>
+
+<div class="av-board" id="board">
+  <div class="col-red" style="display:flex;flex-direction:column;"><div class="av-col-header"><div class="av-col-dot"></div><span class="av-col-title">Não iniciada</span></div><div class="av-skeleton"></div></div>
+  <div class="col-orange" style="display:flex;flex-direction:column;"><div class="av-col-header"><div class="av-col-dot"></div><span class="av-col-title">Em criação</span></div><div class="av-skeleton"></div></div>
+  <div class="col-green" style="display:flex;flex-direction:column;"><div class="av-col-header"><div class="av-col-dot"></div><span class="av-col-title">Finalizada</span></div><div class="av-skeleton"></div></div>
+</div>
+
+<div class="av-modal-wrap" id="modal-wrap">
+  <div class="av-modal">
+    <h3 id="modal-ttl">Nova demanda</h3>
+    <label>Título</label><input type="text" id="f-title" placeholder="Ex.: Criação de logo"/>
+    <label>Descrição</label><textarea id="f-desc" placeholder="Detalhes do pedido..."></textarea>
+    <label>Solicitante</label><input type="text" id="f-req" placeholder="Nome de quem pediu"/>
+    <label>Categoria</label>
+    <select id="f-cat"><option>Design</option><option>Marketing</option><option>Conteúdo</option><option>Social Media</option><option>Outros</option></select>
+    <label>Status</label>
+    <select id="f-status">
+      <option value="nao_iniciada">🔴 Não iniciada</option>
+      <option value="em_criacao">🟠 Em criação</option>
+      <option value="finalizada">🟢 Finalizada</option>
+    </select>
+    <div class="av-modal-footer">
+      <button class="av-btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="av-btn-save" id="btn-save" onclick="saveCard()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="av-toast" id="toast"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAJIZKxsrv_AQtd140IIOl1YI8FdG94bcQ",
+  authDomain: "painel-de-controle-de-demanda.firebaseapp.com",
+  projectId: "painel-de-controle-de-demanda",
+  storageBucket: "painel-de-controle-de-demanda.firebasestorage.app",
+  messagingSenderId: "967196235787",
+  appId: "1:967196235787:web:a5d20cf9e9116c5880cf0e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const colRef = collection(db, 'demandas');
+
+let cards = [], filter = 'todas', editId = null, editDocId = null;
+const catColors = {Design:'purple',Marketing:'teal','Conteúdo':'purple','Social Media':'teal',Outros:'coral'};
+
+function sync(state, label) {
+  const d = document.getElementById('sdot'), l = document.getElementById('slbl');
+  d.className = 'dot ' + (state==='ok'?'ok':state==='saving'?'saving':'err');
+  l.textContent = label;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function ini(n) { return (n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function setFilter(f, el) { filter=f; document.querySelectorAll('.av-filter-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); render(); }
+
+window.setFilter = setFilter;
+
+window.openModal = function(docId) {
+  editDocId = docId || null;
+  editId = docId || null;
+  document.getElementById('modal-ttl').textContent = docId ? 'Editar demanda' : 'Nova demanda';
+  document.getElementById('btn-save').disabled = false;
+  if (docId) {
+    const c = cards.find(x => x.docId === docId);
+    if (c) {
+      document.getElementById('f-title').value = c.title;
+      document.getElementById('f-desc').value = c.desc || '';
+      document.getElementById('f-req').value = c.req || '';
+      document.getElementById('f-cat').value = c.cat;
+      document.getElementById('f-status').value = c.status;
+    }
+  } else {
+    ['f-title','f-desc','f-req'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('f-cat').value = 'Design';
+    document.getElementById('f-status').value = 'nao_iniciada';
+  }
+  document.getElementById('modal-wrap').classList.add('open');
+};
+
+window.closeModal = function() {
+  document.getElementById('modal-wrap').classList.remove('open');
+  editDocId = null; editId = null;
+};
+
+window.saveCard = async function() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { document.getElementById('f-title').focus(); return; }
+  document.getElementById('btn-save').disabled = true;
+  sync('saving', 'Salvando...');
+  const now = new Date();
+  const date = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}`;
+  const data = {
+    title,
+    desc: document.getElementById('f-desc').value,
+    req: document.getElementById('f-req').value,
+    cat: document.getElementById('f-cat').value,
+    status: document.getElementById('f-status').value,
+  };
+  try {
+    if (editDocId) {
+      await updateDoc(doc(db, 'demandas', editDocId), data);
+      toast('Demanda atualizada!');
+    } else {
+      data.date = date;
+      data.createdAt = serverTimestamp();
+      await addDoc(colRef, data);
+      toast('Demanda criada!');
+    }
+    window.closeModal();
+  } catch(e) {
+    sync('err', 'Erro ao salvar');
+    toast('Erro ao salvar. Tente novamente.');
+    document.getElementById('btn-save').disabled = false;
+  }
+};
+
+window.changeStatus = async function(docId, status) {
+  sync('saving', 'Salvando...');
+  try {
+    await updateDoc(doc(db, 'demandas', docId), { status });
+    toast('Status atualizado!');
+  } catch(e) {
+    sync('err', 'Erro'); toast('Erro ao atualizar.');
+  }
+};
+
+window.delCard = async function(docId) {
+  if (!confirm('Excluir esta demanda?')) return;
+  sync('saving', 'Removendo...');
+  try {
+    await deleteDoc(doc(db, 'demandas', docId));
+    toast('Demanda removida.');
+  } catch(e) {
+    sync('err', 'Erro'); toast('Erro ao remover.');
+  }
+};
+
+function renderMetrics() {
+  const ni = cards.filter(c=>c.status==='nao_iniciada').length;
+  const ec = cards.filter(c=>c.status==='em_criacao').length;
+  const fi = cards.filter(c=>c.status==='finalizada').length;
+  document.getElementById('metrics').innerHTML = `
+    <div class="av-metric"><div class="av-metric-label">Total</div><div class="av-metric-val">${cards.length}</div></div>
+    <div class="av-metric"><div class="av-metric-label"><span class="av-metric-dot" style="background:#E24B4A"></span>Não iniciadas</div><div class="av-metric-val" style="color:#f09595">${ni}</div></div>
+    <div class="av-metric"><div class="av-metric-label"><span class="av-metric-dot" style="background:#EF9F27"></span>Em criação</div><div class="av-metric-val" style="color:#FAC775">${ec}</div></div>
+    <div class="av-metric"><div class="av-metric-label"><span class="av-metric-dot" style="background:#639922"></span>Finalizadas</div><div class="av-metric-val" style="color:#97C459">${fi}</div></div>`;
+}
+
+function render() {
+  renderMetrics();
+  const q = document.getElementById('srch').value.toLowerCase();
+  const cols = {nao_iniciada:[], em_criacao:[], finalizada:[]};
+  cards.forEach(c => {
+    if (filter !== 'todas' && c.status !== filter) return;
+    if (q && ![c.title, c.desc||'', c.req||''].some(v => v.toLowerCase().includes(q))) return;
+    if (cols[c.status]) cols[c.status].push(c);
+  });
+  const defs = [
+    {key:'nao_iniciada', cls:'col-red', label:'Não iniciada'},
+    {key:'em_criacao', cls:'col-orange', label:'Em criação'},
+    {key:'finalizada', cls:'col-green', label:'Finalizada'},
+  ];
+  document.getElementById('board').innerHTML = defs.map(col => {
+    const items = cols[col.key];
+    const ns = col.key==='nao_iniciada'?'em_criacao':col.key==='em_criacao'?'finalizada':'nao_iniciada';
+    const nl = col.key==='nao_iniciada'?'Iniciar':col.key==='em_criacao'?'Finalizar':'Reabrir';
+    const ni = col.key==='nao_iniciada'?'ti-player-play':col.key==='em_criacao'?'ti-check':'ti-refresh';
+    const bc = col.key==='nao_iniciada'?'or':col.key==='em_criacao'?'go':'';
+    const bar = col.key==='nao_iniciada'?'bar-red':col.key==='em_criacao'?'bar-orange':'bar-green';
+    const ch = items.length ? items.map(c => `
+      <div class="av-card">
+        <div class="av-status-bar ${bar}"></div>
+        <div class="av-card-top"><div class="av-card-title">${c.title}</div><span class="av-card-id">${c.id||''}</span></div>
+        ${c.desc ? `<div class="av-card-desc">${c.desc}</div>` : ''}
+        <div class="av-card-meta">
+          <span class="av-tag av-tag-${catColors[c.cat]||'purple'}">${c.cat}</span>
+          ${c.req ? `<div class="av-card-avatar" title="${c.req}">${ini(c.req)}</div>` : ''}
+          <span class="av-card-date"><i class="ti ti-calendar" style="font-size:11px" aria-hidden="true"></i>${c.date||''}</span>
+        </div>
+        <div class="av-actions">
+          <button class="av-action-btn ${bc}" onclick="changeStatus('${c.docId}','${ns}')"><i class="ti ${ni}" style="font-size:11px" aria-hidden="true"></i>${nl}</button>
+          <button class="av-action-btn" onclick="openModal('${c.docId}')"><i class="ti ti-edit" style="font-size:11px" aria-hidden="true"></i>Editar</button>
+          <button class="av-action-btn" onclick="delCard('${c.docId}')"><i class="ti ti-trash" style="font-size:11px" aria-hidden="true"></i></button>
+        </div>
+      </div>`).join('')
+      : `<div class="av-empty"><i class="ti ti-inbox" style="font-size:26px;display:block;margin-bottom:8px;opacity:.3" aria-hidden="true"></i>Nenhuma demanda</div>`;
+    return `<div class="av-col ${col.cls}" style="display:flex;flex-direction:column;"><div class="av-col-header"><div class="av-col-dot"></div><span class="av-col-title">${col.label}</span><span class="av-col-count">${items.length}</span></div>${ch}</div>`;
+  }).join('');
+}
+
+window.render = render;
+
+const q = query(colRef, orderBy('createdAt', 'desc'));
+onSnapshot(q, (snapshot) => {
+  cards = snapshot.docs.map((d, i) => ({
+    docId: d.id,
+    id: `AV-${String(i+1).padStart(3,'0')}`,
+    ...d.data()
+  }));
+  sync('ok', 'Sincronizado');
+  render();
+}, (error) => {
+  sync('err', 'Erro de conexão');
+  toast('Erro ao conectar ao banco de dados.');
+});
+
+window.exportImg = async function() {
+  const el = document.getElementById('av-root');
+  const m = document.getElementById('modal-wrap');
+  const was = m.classList.contains('open');
+  if (was) m.classList.remove('open');
+  await new Promise(r => setTimeout(r, 80));
+  html2canvas(el, {backgroundColor:'#0f0f13', scale:2, useCORS:true, logging:false, width:el.scrollWidth, height:el.scrollHeight}).then(c => {
+    const a = document.createElement('a');
+    a.download = 'painel-adriana-vilarinho.png';
+    a.href = c.toDataURL('image/png'); a.click();
+    if (was) m.classList.add('open');
+  });
+};
+
+document.getElementById('modal-wrap').addEventListener('click', function(e) { if (e.target === this) window.closeModal(); });
+</script>
